@@ -1,1 +1,7 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+    background-image: url('./assets/images/fond-ecran-wallpaper-image-abstrait-bleu-13.jpg');
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    height: 80vh; 
+  }

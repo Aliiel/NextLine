@@ -1,5 +1,5 @@
 body {
-    background-image: url('./assets/images/fond-ecran-wallpaper-image-abstrait-bleu-13.jpg');
+    background-image: url('../public/assets/images/fond-ecran-wallpaper-image-abstrait-bleu-13.jpg');
     background-size: cover; 
     background-position: center; 
     background-repeat: no-repeat; 

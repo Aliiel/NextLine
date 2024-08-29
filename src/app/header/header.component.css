@@ -1,0 +1,27 @@
+.custom-navbar-bg {
+    background-color: rgba(255, 255, 255, 0.728); 
+}
+
+.custom-btn-blue {
+    background-color: white; 
+    color: #182658; 
+    border-color: #182658; 
+    transition: transform 0.3s ease, background-color 0.3s ease;
+  }
+
+  .custom-btn-blue:hover {
+    background-color: #182658; 
+    border-color: #182658;
+    color: white;
+    transform: scale(1.1);
+  }
+
+  .border-bottom-custom {
+    border-bottom: 2px solid #182658; 
+  }
+
+  .bebas-neue-regular {
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }

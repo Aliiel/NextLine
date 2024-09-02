@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LayoutComponent } from './layout.component';
+import { FormulaireSiretComponent } from './formulaire-siret.component';
 
-describe('LayoutComponent', () => {
-  let component: LayoutComponent;
-  let fixture: ComponentFixture<LayoutComponent>;
+describe('FormulaireSiretComponent', () => {
+  let component: FormulaireSiretComponent;
+  let fixture: ComponentFixture<FormulaireSiretComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LayoutComponent]
+      imports: [FormulaireSiretComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(LayoutComponent);
+    fixture = TestBed.createComponent(FormulaireSiretComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

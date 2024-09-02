@@ -1,1 +1,7 @@
-<p>formulaire works!</p>
+<div *ngIf="entreprise">
+    <h2>Informations sur l'entreprise</h2>
+    <p>Raison sociale : {{ entreprise.raisonSociale }}</p>
+    <p>Adresse : {{ entreprise.adresseEntreprise }} {{ entreprise.villeDTO.codePostal }} {{ entreprise.villeDTO.nomVille }} </p>
+    <p>Téléphone : {{ entreprise.telephoneEntreprise }}</p>
+    <p>Email : {{ entreprise.emailEntreprise }}</p>
+  </div>

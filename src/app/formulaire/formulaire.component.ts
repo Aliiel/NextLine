@@ -1,23 +1,22 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { EntrepriseService } from '../entreprise.service';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-formulaire',
   standalone: true,
-  imports: [],
+  imports: [NgIf],
   templateUrl: './formulaire.component.html',
   styleUrl: './formulaire.component.css'
 })
 export class FormulaireComponent {
 
-  private apiUrl = 'http://localhost:8081/api-nextline/villes'; 
+  entreprise: any;
 
-  constructor (private http: HttpClient) {}
+  constructor(private entrepriseService: EntrepriseService) { }
 
-  goFormulaire(): Observable<any[]> {
-
-    return this.http.get<any[]>(this.apiUrl);
+  ngOnInit(): void {
+    this.entreprise = this.entrepriseService.getEntrepriseData();  // Récupère les données stockées
   }
 
 }

@@ -1,0 +1,22 @@
+<div class="container d-flex justify-content-center align-items-center mt-5">
+    <div class="w-50">
+      <form [formGroup]="siretForm" (ngSubmit)="onSubmit()">
+        <div class="form-group mb-3">
+          <label for="siret" class="form-label mb-2">Veuillez saisir votre numéro SIRET :</label>
+          <input
+            type="text"
+            id="siret"
+            formControlName="siret"
+            class="form-control"
+            placeholder="Entrez le numéro SIRET"
+          />
+
+          <div *ngIf="siret?.invalid && (siret?.dirty || siret?.touched)" class="text-danger">
+            <div *ngIf="siret?.errors?.['required']">Le numéro SIRET est requis.</div>
+            <div *ngIf="siret?.errors?.['pattern']">Le numéro SIRET doit comporter exactement 14 chiffres.</div>
+          </div>
+        </div>
+        <button type="submit" class="btn custom-btn-blue roboto-condensed mt-4 w-100" [disabled]="siretForm.invalid">Soumettre</button>
+      </form>
+    </div>
+  </div>

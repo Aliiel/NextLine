@@ -1,0 +1,54 @@
+.custom-spacing {
+    margin-top: 10rem;
+    margin-bottom: 4rem;
+  }
+
+  .custom-btn-blue {
+    background-color: white; 
+    color: #182658; 
+    border-color: #182658; 
+    transition: transform 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .custom-btn-blue:hover {
+    background-color: #182658; 
+    border-color: #182658;
+    color: white;
+    transform: scale(1.2);
+  }
+
+  .animate__flip {
+    animation-duration: 1s; 
+    animation-fill-mode: both; 
+  }
+
+  .jersey-10-regular {
+    font-family: "Jersey 10", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  .bebas-neue-regular {
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  .roboto-condensed {
+    font-family: "Roboto Condensed", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  .custom-class {
+    margin-bottom: 30px;
+  }
+
+  body {
+    background-image: url('../../../public/assets/images/fond-ecran-wallpaper-image-abstrait-bleu-13.jpg');
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    height: 140vh; 
+  }

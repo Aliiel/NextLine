@@ -1,0 +1,23 @@
+<head>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Jersey+10&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  </head>
+  <app-header></app-header>
+  <div class="custom-class d-flex flex-column">
+  <h1 class="text-center bebas-neue-regular custom-spacing animate__animated animate__zoomInUp">Bienvenue sur NextLine !</h1>
+  <h3 class="text-center jersey-10-regular text-dark mb-4">Front-end en cours de développement ...</h3>
+  <div class="d-flex justify-content-center mb-5">
+    <div class="spinner-border text-primary-emphasis" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  <div class="d-grid gap-2 col-6 mx-auto mt-5">
+    <a class="btn custom-btn-blue roboto-condensed" [routerLink]="['/entreprises']" type="button">Accès au formulaire</a>
+  </div>
+  </div>
+  <app-footer></app-footer>

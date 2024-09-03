@@ -1,0 +1,20 @@
+.custom-btn-blue {
+    background-color: white; 
+    color: #182658; 
+    border-color: #182658; 
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+  
+  .custom-btn-blue:hover {
+    background-color: #182658; 
+    border-color: #182658;
+    color: white;
+    transform: scale(1.2);
+}
+
+.roboto-condensed {
+    font-family: "Roboto Condensed", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}

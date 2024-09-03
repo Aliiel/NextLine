@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { EntrepriseService } from '../entreprise.service';
 import { NgIf } from '@angular/common';
 
 @Component({
@@ -11,12 +10,6 @@ import { NgIf } from '@angular/common';
 })
 export class FormulaireComponent {
 
-  entreprise: any;
-
-  constructor(private entrepriseService: EntrepriseService) { }
-
-  ngOnInit(): void {
-    this.entreprise = this.entrepriseService.getEntrepriseData();  // Récupère les données stockées
-  }
+  
 
 }

@@ -60,12 +60,12 @@ export class FormulaireSiretComponent {
   
             console.log('Entreprise trouvée : ', data);
             this.entrepriseService.setEntrepriseData(data);
-            this.router.navigate(['/formulaire']);
+            this.router.navigate(['/formulaire-entreprise']);
           },
   
           (error) => {
   
-            console.error('Erreur lors de la vérification de l\'entreprise', error);
+            console.error('L\'entreprise n\'est pas répertoriée', error);
             // Gère l'erreur ici, par exemple en affichant un message d'erreur
           }
         );

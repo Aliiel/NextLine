@@ -29,6 +29,28 @@ export class EntrepriseService {
     return this.entrepriseData;
   }
 
+  getFormesJuridiques(): Observable<any[]> {
+    return this.http.get<any[]>('http://localhost:8081/api-nextline/formes-juridiques');
+  }
+
+  getDirigeants(): Observable<any[]> {
+    return this.http.get<any[]>('http://localhost:8081/api-nextline/dirigeants');
+  }
+
+  getAssurances(): Observable<any[]> {
+    return this.http.get<any[]>('http://localhost:8081/api-nextline/assurances');
+  }
+
+  addFormeJuridique(formeJuridique: { nomFormeJuridique: string }): Observable<any> {
+
+    return this.http.post<any>('http://localhost:8081/api-nextline/formes-juridiques', formeJuridique);
+  }
+
+  addAssurance( assurance: { nomAssurance: string, numeroSocietaire: string }): Observable<any> {
+
+    return this.http.post<any>('http://localhost:8081/api-nextline/assurances', assurance);
+  }
+
 
 }
 

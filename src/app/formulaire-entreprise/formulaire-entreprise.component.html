@@ -1,80 +1,201 @@
-<!-- entreprise-form.component.html -->
-<div class="container mt-5">
+<div class="container mt-5 mb-5">
     <h2>Saisir les informations de l'entreprise</h2>
     <form [formGroup]="entrepriseForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="raisonSociale">Raison Sociale</label>
+      <div class="form-group mt-2">
+        <label for="raisonSociale">Raison Sociale : </label>
         <input id="raisonSociale" formControlName="raisonSociale" class="form-control" type="text">
         <div *ngIf="entrepriseForm.get('raisonSociale')?.invalid && entrepriseForm.get('raisonSociale')?.touched" class="text-danger">
           La raison sociale est requise.
         </div>
       </div>
   
-      <div class="form-group">
-        <label for="adresseEntreprise">Adresse de l'entreprise</label>
+      <div class="form-group mt-2">
+        <label for="adresseEntreprise">Adresse de l'entreprise : </label>
         <input id="adresseEntreprise" formControlName="adresseEntreprise" class="form-control" type="text">
         <div *ngIf="entrepriseForm.get('adresseEntreprise')?.invalid && entrepriseForm.get('adresseEntreprise')?.touched" class="text-danger">
           L'adresse est requise.
         </div>
       </div>
 
-      <div class="form-group">
+      <div class="form-group mt-2" formGroupName="ville">
         <label for="nomVille">Ville :</label>
         <input id="nomVille" formControlName="nomVille" class="form-control" type="text">
-        <div *ngIf="entrepriseForm.get('nomVille')?.invalid && entrepriseForm.get('nomVille')?.touched" class="text-danger">
+        <div *ngIf="entrepriseForm.get('ville.nomVille')?.invalid && entrepriseForm.get('ville.nomVille')?.touched" class="text-danger">
           La ville est requise.
         </div>
       </div>
 
-      <div class="form-group">
+      <div class="form-group mt-2" formGroupName="ville">
         <label for="codePostal">Code postal :</label>
         <input id="codePostal" formControlName="codePostal" class="form-control" type="text">
-        <div *ngIf="entrepriseForm.get('codePostal')?.invalid && entrepriseForm.get('codePostal')?.touched" class="text-danger">
+        <div *ngIf="entrepriseForm.get('ville.codePostal')?.invalid && entrepriseForm.get('ville.codePostal')?.touched" class="text-danger">
           Le code postal est requis.
         </div>
       </div>
   
-      <div class="form-group">
-        <label for="numeroSiret">Numéro SIRET</label>
-        <input id="numeroSiret" formControlName="numeroSiret" class="form-control" type="text">
-        <div *ngIf="entrepriseForm.get('numeroSiret')?.invalid && entrepriseForm.get('numeroSiret')?.touched" class="text-danger">
-          Le numéro SIRET est invalide.
-        </div>
-      </div>
-  
-      <div class="form-group">
-        <label for="telephoneEntreprise">Téléphone</label>
+      <div class="form-group mt-2">
+        <label for="telephoneEntreprise">Téléphone : </label>
         <input id="telephoneEntreprise" formControlName="telephoneEntreprise" class="form-control" type="text">
         <div *ngIf="entrepriseForm.get('telephoneEntreprise')?.invalid && entrepriseForm.get('telephoneEntreprise')?.touched" class="text-danger">
           Le numéro de téléphone est invalide.
         </div>
       </div>
   
-      <div class="form-group">
-        <label for="emailEntreprise">Email</label>
+      <div class="form-group mt-2">
+        <label for="emailEntreprise">Email : </label>
         <input id="emailEntreprise" formControlName="emailEntreprise" class="form-control" type="email">
         <div *ngIf="entrepriseForm.get('emailEntreprise')?.invalid && entrepriseForm.get('emailEntreprise')?.touched" class="text-danger">
           L'email est invalide.
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="formeJuridique">Forme Juridique</label>
-        <select formControlName="formeJuridique" class="form-control">
-          <option *ngFor="let forme of formesJuridiques" [value]="forme.id">{{ forme.nomFormeJuridique }}</option>
-        </select>
-        <button type="button" class="btn custom-btn-blue roboto-condensed" (click)="addNewFormeJuridique()">Ajouter une nouvelle forme juridique</button>
-      </div>
-
-      <div class="form-group">
-        <label for="assurance">Assurance</label>
-        <select formControlName="assurance" class="form-control">
-          <option *ngFor="let assurance of assurances" [value]="assurance.id">{{ assurance.nomAssurance }}</option>
-        </select>
-        <button type="button" class="btn custom-btn-blue roboto-condensed" (click)="addNewAssurance()">Ajouter une nouvelle assurance</button>
+      <!-- Ligne contenant les deux premières cartes -->
+      <div class="row">
+        <!-- Carte pour Forme Juridique -->
+        <div class="col-md-6">
+          <div class="card card-same-height mt-4">
+            <div class="card-header">
+              Forme Juridique
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label for="formeJuridique">Forme Juridique : </label>
+                <select formControlName="formeJuridique" class="form-control">
+                  <option value="" disabled selected>Sélectionnez une forme juridique</option>
+                  <option *ngFor="let forme of formesJuridiques" [value]="forme.id">{{ forme.nomFormeJuridique }}</option>
+                </select>
+              </div>
+              <button type="button" class="btn custom-btn-blue-modal roboto-condensed mt-2" (click)="openModal('formeJuridiqueModal')">Ajouter une nouvelle forme juridique</button>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Carte pour Assurance -->
+        <div class="col-md-6">
+          <div class="card card-same-height mt-4">
+            <div class="card-header">
+              Assurance
+            </div>
+            <div class="card-body">
+              <button type="button" class="btn custom-btn-blue-modal roboto-condensed mb-2" (click)="openModal('assuranceModal')">Ajouter une assurance</button>
+              <div class="form-group">
+                <label for="nomAssurance">Nom de l'assurance :</label>
+                <input id="nomAssurance" formControlName="nomAssurance" class="form-control" type="text">
+              </div>
+              <div class="form-group mt-2">
+                <label for="numeroSocietaire">Numéro sociétaire :</label>
+                <input id="numeroSocietaire" formControlName="numeroSocietaire" class="form-control" type="text">
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
   
-      <button type="submit" class="btn custom-btn-blue roboto-condensed" [disabled]="entrepriseForm.invalid">Suivant</button>
+      <!-- Carte pour Dirigeant (centrée en dessous) -->
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card card-same-height mt-4">
+            <div class="card-header">
+              Dirigeant
+            </div>
+            <div class="card-body">
+              <button type="button" class="btn custom-btn-blue-modal roboto-condensed mb-2" (click)="openModal('dirigeantModal')">Ajouter un dirigeant</button>
+              <div class="form-group">
+                <label for="nomDirigeant">Nom du dirigeant :</label>
+                <input id="nomDirigeant" formControlName="nomDirigeant" class="form-control" type="text">
+              </div>
+              <div class="form-group mt-2">
+                <label for="prenomDirigeant">Prénom du dirigeant :</label>
+                <input id="prenomDirigeant" formControlName="prenomDirigeant" class="form-control" type="text">
+              </div>
+              <div class="form-group mt-2">
+                <label for="emailDirigeant">Email du dirigeant :</label>
+                <input id="emailDirigeant" formControlName="emailDirigeant" class="form-control" type="text">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <button type="submit" class="btn custom-btn-blue roboto-condensed mt-3" [disabled]="entrepriseForm.invalid">Suivant</button>
     </form>
   </div>
+
+  <!-- Modale pour ajouter une nouvelle forme juridique -->
+<div class="modal fade" id="formeJuridiqueModal" tabindex="-1" aria-labelledby="formeJuridiqueModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="formeJuridiqueModalLabel">Ajouter une forme juridique</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="nomFormeJuridiqueInput">Nom de la forme juridique : </label>
+          <input type="text" id="nomFormeJuridiqueInput" [(ngModel)]="nomFormeJuridique" class="form-control">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn custom-btn-red roboto-condensed" data-bs-dismiss="modal">Fermer</button>
+        <button type="button" class="btn custom-btn-blue-modal roboto-condensed" (click)="saveNewFormeJuridique()">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Modale pour ajouter une nouvelle assurance -->
+  <div class="modal fade" id="assuranceModal" tabindex="-1" aria-labelledby="assuranceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="assuranceModalLabel">Ajouter une assurance</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="nomAssuranceInput">Nom de l'assurance : </label>
+            <input type="text" id="nomAssuranceInput" [(ngModel)]="nomAssurance" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="numeroSocietaireInput">Numéro sociétaire : </label>
+            <input type="text" id="numeroSocietaireInput" [(ngModel)]="numeroSocietaire" class="form-control">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn custom-btn-red roboto-condensed" data-bs-dismiss="modal">Fermer</button>
+          <button type="button" class="btn custom-btn-blue-modal roboto-condensed" (click)="saveNewAssurance()">Enregistrer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- Modale pour ajouter un nouveau dirigeant -->
+<div class="modal fade" id="dirigeantModal" tabindex="-1" aria-labelledby="dirigeantModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="dirigeantModalLabel">Ajouter un dirigeant</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="nomDirigeantInput">Nom du dirigeant : </label>
+          <input type="text" id="nomDirigeantInput" [(ngModel)]="nomDirigeant" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="prenomDirigeantInput">Prénom du dirigeant : </label>
+          <input type="text" id="prenomDirigeantInput" [(ngModel)]="prenomDirigeant" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="emailDirigeantInput">Email du dirigeant : </label>
+          <input type="text" id="emailDirigeantInput" [(ngModel)]="emailDirigeant" class="form-control">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn custom-btn-red roboto-condensed" data-bs-dismiss="modal">Fermer</button>
+        <button type="button" class="btn custom-btn-blue-modal roboto-condensed" (click)="saveNewFormeJuridique()">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
   

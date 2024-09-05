@@ -54,6 +54,9 @@ export class FormulaireSiretComponent {
 
       if (this.token) {
 
+        console.log('token : ', this.token);
+        console.log('Numéro siret : ', siret)
+
         this.entrepriseService.checkEntreprise(this.token, siret).subscribe(
 
           (data) => {

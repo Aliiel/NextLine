@@ -4,6 +4,13 @@
     border-color: #182658; 
     transition: transform 0.3s ease, background-color 0.3s ease;
 }
+
+.custom-btn-red {
+    background-color: white; 
+    color: #ad1818; 
+    border-color: #ad1818; 
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
   
   .custom-btn-blue:hover {
     background-color: #182658; 
@@ -12,9 +19,35 @@
     transform: scale(1.2);
 }
 
+.custom-btn-blue-modal {
+    background-color: white; 
+    color: #182658; 
+    border-color: #182658; 
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.custom-btn-blue-modal:hover {
+    background-color: #182658; 
+    border-color: #182658;
+    color: white;
+}
+
+.custom-btn-red:hover {
+    background-color: #ad1818; 
+    border-color: #ad1818;
+    color: white;
+}
+
 .roboto-condensed {
     font-family: "Roboto Condensed", sans-serif;
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
+}
+
+.card-same-height {
+    min-height: 300px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
 }

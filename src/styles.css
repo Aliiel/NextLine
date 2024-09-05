@@ -3,5 +3,6 @@ body {
     background-size: cover; 
     background-position: center; 
     background-repeat: no-repeat; 
-    height: 140vh; 
+    min-height: 100vh; /* Ajuste la hauteur minimale pour correspondre à la taille de la fenêtre */
+    margin: 0;
   }

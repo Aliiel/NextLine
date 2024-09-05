@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { EntrepriseService } from '../entreprise.service';
 import { NgIf, NgFor } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-formulaire-entreprise',
   standalone: true,
-  imports: [NgIf, ReactiveFormsModule, NgFor],
+  imports: [NgIf, ReactiveFormsModule, NgFor, FormsModule],
   templateUrl: './formulaire-entreprise.component.html',
   styleUrl: './formulaire-entreprise.component.css'
 })
@@ -15,7 +16,15 @@ export class FormulaireEntrepriseComponent {
 
   entrepriseForm: FormGroup;
   formesJuridiques: any[] = [];
+  nomFormeJuridique: string = '';
   assurances: any[] = [];
+  nomAssurance: string = '';
+  numeroSocietaire: string = '';
+  fonctions: any[] = [];
+  nomDirigeant: string = '';
+  prenomDirigeant: string = '';
+  emailDirigeant: string = '';
+  nomFonction: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -86,7 +95,45 @@ export class FormulaireEntrepriseComponent {
       console.log('Assurances récupérées :', data);
       this.assurances = data;
     });
+
+    this.entrepriseService.getFonctions().subscribe((data) => {
+
+      console.log('Fonctions récupérées :', data);
+      this.fonctions = data;
+    });
   }
+
+
+  openModal(modalId: string): void {
+
+    const modalElement = document.getElementById(modalId);
+
+    if (modalElement) {
+
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+
+    } else {
+
+      console.error('Modale non trouvée :', modalId);
+    }
+  }
+
+  closeModal(modalId: string): void {
+
+    const modalElement = document.getElementById(modalId);
+
+    if (modalElement) {
+
+      const modal = bootstrap.Modal.getInstance(modalElement);
+
+      if (modal) {
+
+        modal.hide();
+      }
+    }
+  }
+  
 
   onSubmit(): void {
 
@@ -98,36 +145,64 @@ export class FormulaireEntrepriseComponent {
     }
   }
 
-  addNewFormeJuridique(): void {
+  saveNewFormeJuridique(): void {
 
-    const nomFormeJuridique = prompt('Entrez la nouvelle forme juridique :');
+    if (this.nomFormeJuridique) {
 
-    if (nomFormeJuridique) {
-
-      this.entrepriseService.addFormeJuridique({ nomFormeJuridique: nomFormeJuridique }).subscribe((formeJuridique) => {
+      this.entrepriseService.addFormeJuridique({ nomFormeJuridique: this.nomFormeJuridique }).subscribe((formeJuridique) => {
+        
         this.formesJuridiques.push(formeJuridique); // Met à jour la liste des formes juridiques
         this.entrepriseForm.get('formeJuridique')?.setValue(formeJuridique.id); // Sélectionne la nouvelle forme
-      });
-    }
+
+        this.closeModal('formeJuridiqueModal');
+    });
+  }
+}
+
+  saveNewAssurance(): void {
+
+    const newAssurance = {
+
+      nomAssurance: this.nomAssurance,
+      numeroSocietaire: this.numeroSocietaire
+    };
+
+  this.entrepriseService.addAssurance(newAssurance).subscribe((assurance) => {
+        
+    this.assurances.push(assurance); // Met à jour la liste des assurances
+    this.entrepriseForm.get('assurance')?.setValue({
+      
+      nomAssurance: assurance.nomAssurance,
+      numeroSocietaire: assurance.numeroSocietaire
+    });
+
+    this.closeModal('assuranceModal');
+        
+    });
   }
 
-  addNewAssurance(): void {
+  saveNewDirigeant(): void {
 
-    const nomAssurance = prompt('Entrez le nom de l\'assurance :');
+    const newDirigeant = {
 
-    if (nomAssurance) {
+      nomDirigeant: this.nomDirigeant,
+      prenomDirigeant: this.prenomDirigeant,
+      emailDirigeant: this.emailDirigeant,
+      nomFonction: this.nomFonction
+    };
 
-    const numeroSocietaire = prompt('Entrez le numéro sociétaire :');
+  this.entrepriseService.addDirigeant(newDirigeant).subscribe((dirigeant) => {
+        
+    this.entrepriseForm.get('dirigeant')?.setValue({
+      
+      nomDirigeant: dirigeant.nomDirigeant,
+      prenomDirigeant: dirigeant.prenomDirigeant,
+      emailDirigeant: dirigeant.emailDirigeant,
+      nomFonction: dirigeant.nomFonction
+    });
 
-    if (numeroSocietaire) {
-
-      // On passe les deux valeurs à la méthode addAssurance
-      this.entrepriseService.addAssurance({ nomAssurance: nomAssurance, numeroSocietaire: numeroSocietaire }).subscribe((assurance) => {
-
-        this.assurances.push(assurance); // Met à jour la liste des assurances
-        this.entrepriseForm.get('assurance')?.setValue(assurance.id); // Sélectionne la nouvelle assurance
-      });
-    }
-  }
+    this.closeModal('dirigeantModal');
+        
+    });
   }
 }

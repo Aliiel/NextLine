@@ -49,77 +49,92 @@
         </div>
       </div>
 
-      <!-- Ligne contenant les deux premières cartes -->
-      <div class="row">
-        <!-- Carte pour Forme Juridique -->
-        <div class="col-md-6">
-          <div class="card card-same-height mt-4">
-            <div class="card-header">
-              Forme Juridique
-            </div>
-            <div class="card-body">
-              <div class="form-group">
-                <label for="formeJuridique">Forme Juridique : </label>
-                <select formControlName="formeJuridique" class="form-control">
-                  <option value="" disabled selected>Sélectionnez une forme juridique</option>
-                  <option *ngFor="let forme of formesJuridiques" [value]="forme.id">{{ forme.nomFormeJuridique }}</option>
-                </select>
-              </div>
-              <button type="button" class="btn custom-btn-blue-modal roboto-condensed mt-2" (click)="openModal('formeJuridiqueModal')">Ajouter une nouvelle forme juridique</button>
-            </div>
-          </div>
+ <!-- Ligne contenant les deux premières cartes -->
+ <div class="row">
+  <!-- Carte pour Forme Juridique -->
+  <div class="col-md-6">
+    <div class="card card-same-height mt-4">
+      <div class="card-header">
+        Forme Juridique
+      </div>
+      <div class="card-body">
+        <div class="text-center mb-3">
+          <button type="button" class="btn custom-btn-blue-modal roboto-condensed btn-same-size" (click)="openModal('formeJuridiqueModal')">Ajouter une nouvelle forme juridique</button>
         </div>
-  
-        <!-- Carte pour Assurance -->
-        <div class="col-md-6">
-          <div class="card card-same-height mt-4">
-            <div class="card-header">
-              Assurance
-            </div>
-            <div class="card-body">
-              <button type="button" class="btn custom-btn-blue-modal roboto-condensed mb-2" (click)="openModal('assuranceModal')">Ajouter une assurance</button>
-              <div class="form-group">
-                <label for="nomAssurance">Nom de l'assurance :</label>
-                <input id="nomAssurance" formControlName="nomAssurance" class="form-control" type="text">
-              </div>
-              <div class="form-group mt-2">
-                <label for="numeroSocietaire">Numéro sociétaire :</label>
-                <input id="numeroSocietaire" formControlName="numeroSocietaire" class="form-control" type="text">
-              </div>
-            </div>
+        <div class="form-group mb-2">
+          <label for="formeJuridique">Forme Juridique : </label>
+          <select id="formeJuridique" formControlName="formeJuridique" class="form-control">
+            <option value="" disabled selected>Sélectionnez une forme juridique</option>
+            <option *ngFor="let forme of formesJuridiques" [value]="forme.id">{{ forme.nomFormeJuridique }}</option>
+          </select>
+          <div *ngIf="entrepriseForm.get('formeJuridique')?.invalid && entrepriseForm.get('formeJuridique')?.touched" class="text-danger">
+            La forme juridique est requise.
           </div>
         </div>
       </div>
-  
-      <!-- Carte pour Dirigeant (centrée en dessous) -->
-      <div class="row justify-content-center">
-        <div class="col-md-8">
-          <div class="card card-same-height mt-4">
-            <div class="card-header">
-              Dirigeant
-            </div>
-            <div class="card-body">
-              <button type="button" class="btn custom-btn-blue-modal roboto-condensed mb-2" (click)="openModal('dirigeantModal')">Ajouter un dirigeant</button>
-              <div class="form-group">
-                <label for="nomDirigeant">Nom du dirigeant :</label>
-                <input id="nomDirigeant" formControlName="nomDirigeant" class="form-control" type="text">
-              </div>
-              <div class="form-group mt-2">
-                <label for="prenomDirigeant">Prénom du dirigeant :</label>
-                <input id="prenomDirigeant" formControlName="prenomDirigeant" class="form-control" type="text">
-              </div>
-              <div class="form-group mt-2">
-                <label for="emailDirigeant">Email du dirigeant :</label>
-                <input id="emailDirigeant" formControlName="emailDirigeant" class="form-control" type="text">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-  
-      <button type="submit" class="btn custom-btn-blue roboto-condensed mt-3" [disabled]="entrepriseForm.invalid">Suivant</button>
-    </form>
+    </div>
   </div>
+
+  <!-- Carte pour Assurance -->
+  <div class="col-md-6">
+    <div class="card card-same-height mt-4">
+      <div class="card-header">
+        Assurance
+      </div>
+      <div class="card-body">
+        <div class="text-center mb-2">
+          <button type="button" class="btn custom-btn-blue-modal roboto-condensed btn-same-size" (click)="openModal('assuranceModal')">Entrez les informations de l'assurance de l'entreprise</button>
+        </div>
+        <div formGroupName="assurance">
+        <div class="form-group mt-2">
+          <label for="nomAssurance">Nom de l'assurance saisie :</label>
+          <input id="nomAssurance" formControlName="nomAssurance" class="form-control" type="text">
+        </div>
+        <div class="form-group mt-2">
+          <label for="numeroSocietaire">Numéro sociétaire saisi :</label>
+          <input id="numeroSocietaire" formControlName="numeroSocietaire" class="form-control" type="text">
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Carte pour Dirigeant (centrée en dessous) -->
+<div class="row justify-content-center mt-4">
+  <div class="col-md-8">
+    <div class="card card-same-height">
+      <div class="card-header">
+        Dirigeant
+      </div>
+      <div class="card-body">
+        <div class="text-center mb-2">
+          <button type="button" class="btn custom-btn-blue-modal roboto-condensed btn-same-size" (click)="openModal('dirigeantModal')">Entrez les informations du dirigeant de l'entreprise</button>
+        </div>
+        <div formGroupName="dirigeant">
+        <div class="form-group">
+          <label for="nomDirigeant">Nom du dirigeant saisi :</label>
+          <input id="nomDirigeant" formControlName="nomDirigeant" class="form-control" type="text">
+        </div>
+        <div class="form-group mt-2">
+          <label for="prenomDirigeant">Prénom du dirigeant saisi :</label>
+          <input id="prenomDirigeant" formControlName="prenomDirigeant" class="form-control" type="text">
+        </div>
+        <div class="form-group mt-2">
+          <label for="emailDirigeant">E-mail du dirigeant saisi :</label>
+          <input id="emailDirigeant" formControlName="emailDirigeant" class="form-control" type="text">
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="text-center mt-3">
+  <button type="submit" class="btn custom-btn-blue roboto-condensed btn-same-size" [disabled]="entrepriseForm.invalid">Suivant</button>
+</div>
+</form>
+</div>
 
   <!-- Modale pour ajouter une nouvelle forme juridique -->
 <div class="modal fade" id="formeJuridiqueModal" tabindex="-1" aria-labelledby="formeJuridiqueModalLabel" aria-hidden="true">
@@ -193,7 +208,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn custom-btn-red roboto-condensed" data-bs-dismiss="modal">Fermer</button>
-        <button type="button" class="btn custom-btn-blue-modal roboto-condensed" (click)="saveNewFormeJuridique()">Enregistrer</button>
+        <button type="button" class="btn custom-btn-blue-modal roboto-condensed" (click)="saveNewDirigeant()">Enregistrer</button>
       </div>
     </div>
   </div>

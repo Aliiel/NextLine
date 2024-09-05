@@ -20,11 +20,10 @@ export class FormulaireEntrepriseComponent {
   assurances: any[] = [];
   nomAssurance: string = '';
   numeroSocietaire: string = '';
-  fonctions: any[] = [];
   nomDirigeant: string = '';
   prenomDirigeant: string = '';
   emailDirigeant: string = '';
-  nomFonction: string = '';
+  dirigeants: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -46,7 +45,6 @@ export class FormulaireEntrepriseComponent {
         nomDirigeant: [''],
         prenomDirigeant: [''],
         emailDirigeant: [''],
-        fonction: ['']
       }),
       assurance: this.fb.group({
         nomAssurance: [''],
@@ -63,20 +61,7 @@ export class FormulaireEntrepriseComponent {
       this.entrepriseForm.patchValue({
         raisonSociale: entrepriseData.raisonSociale,
         adresseEntreprise: entrepriseData.adresseEntreprise,
-        numeroSiret: entrepriseData.numeroSiret,
-        telephoneEntreprise: entrepriseData.telephoneEntreprise,
-        emailEntreprise: entrepriseData.emailEntreprise,
         formeJuridique: entrepriseData.formeJuridiqueDTO.nomFormeJuridique,
-        dirigeant: {
-          nomDirigeant: entrepriseData.dirigeantDTO.nomDirigeant,
-          prenomDirigeant: entrepriseData.dirigeantDTO.prenomDirigeant,
-          emailDirigeant: entrepriseData.dirigeantDTO.emailDirigeant,
-          fonction: entrepriseData.dirigeantDTO.fonctionDTO.nomFonction
-        },
-        assurance: {
-          nomAssurance: entrepriseData.assuranceDTO.nomAssurance,
-          numeroSocietaire: entrepriseData.assuranceDTO.numeroSocietaire
-        },
         ville: {
           nomVille: entrepriseData.villeDTO.nomVille,
           codePostal: entrepriseData.villeDTO.codePostal
@@ -94,12 +79,6 @@ export class FormulaireEntrepriseComponent {
 
       console.log('Assurances récupérées :', data);
       this.assurances = data;
-    });
-
-    this.entrepriseService.getFonctions().subscribe((data) => {
-
-      console.log('Fonctions récupérées :', data);
-      this.fonctions = data;
     });
   }
 
@@ -139,11 +118,42 @@ export class FormulaireEntrepriseComponent {
 
     if (this.entrepriseForm.valid) {
 
-      this.entrepriseService.setEntrepriseData(this.entrepriseForm.value);
+      const entrepriseData = this.entrepriseForm.value;
 
-      this.router.navigate(['/next-step']); // Rediriger vers la prochaine étape du formulaire
+      console.log('entreprise fournie : ', this.entrepriseForm.value);
+
+      const adaptedEntrepriseData = {
+        raisonSociale: entrepriseData.raisonSociale,
+        adresseEntreprise: entrepriseData.adresseEntreprise,
+        numeroSiret: entrepriseData.numeroSiret,
+        telephoneEntreprise: entrepriseData.telephoneEntreprise,
+        emailEntreprise: entrepriseData.emailEntreprise,
+        villeDTO: entrepriseData.ville,
+        formeJuridiqueDTO: { id: entrepriseData.formeJuridique },
+        dirigeantDTO: entrepriseData.dirigeant,
+        assuranceDTO: entrepriseData.assurance,
+      };
+
+      this.entrepriseService.setEntrepriseData(adaptedEntrepriseData);
+
+      console.log('entreprise à enregistrer : ', adaptedEntrepriseData);
+
+      this.entrepriseService.saveEntreprise(adaptedEntrepriseData).subscribe({
+
+        next: (response) => {
+
+          console.log('Entreprise créée avec succès :', response);
+          this.router.navigate(['/next-step']); // Rediriger vers la prochaine étape du formulaire
+        },
+
+        error: (err) => {
+
+          console.error('Erreur lors de la création de l\'entreprise :', err);
+        }
+      });
     }
   }
+
 
   saveNewFormeJuridique(): void {
 
@@ -151,8 +161,9 @@ export class FormulaireEntrepriseComponent {
 
       this.entrepriseService.addFormeJuridique({ nomFormeJuridique: this.nomFormeJuridique }).subscribe((formeJuridique) => {
         
-        this.formesJuridiques.push(formeJuridique); // Met à jour la liste des formes juridiques
-        this.entrepriseForm.get('formeJuridique')?.setValue(formeJuridique.id); // Sélectionne la nouvelle forme
+        this.formesJuridiques.push(formeJuridique); 
+        this.entrepriseForm.get('formeJuridique')?.setValue(formeJuridique.id); 
+        console.log('Set la forme juridique : ', formeJuridique.nomFormeJuridique);
 
         this.closeModal('formeJuridiqueModal');
     });
@@ -169,13 +180,15 @@ export class FormulaireEntrepriseComponent {
 
   this.entrepriseService.addAssurance(newAssurance).subscribe((assurance) => {
         
-    this.assurances.push(assurance); // Met à jour la liste des assurances
+    this.assurances.push(assurance); 
     this.entrepriseForm.get('assurance')?.setValue({
       
       nomAssurance: assurance.nomAssurance,
       numeroSocietaire: assurance.numeroSocietaire
     });
 
+    console.log('set nom assurance : ', this.nomAssurance);
+    console.log('set num sociétaire : ', this.numeroSocietaire);
     this.closeModal('assuranceModal');
         
     });
@@ -188,21 +201,24 @@ export class FormulaireEntrepriseComponent {
       nomDirigeant: this.nomDirigeant,
       prenomDirigeant: this.prenomDirigeant,
       emailDirigeant: this.emailDirigeant,
-      nomFonction: this.nomFonction
     };
 
   this.entrepriseService.addDirigeant(newDirigeant).subscribe((dirigeant) => {
         
+    this.dirigeants.push(dirigeant);
     this.entrepriseForm.get('dirigeant')?.setValue({
       
       nomDirigeant: dirigeant.nomDirigeant,
       prenomDirigeant: dirigeant.prenomDirigeant,
       emailDirigeant: dirigeant.emailDirigeant,
-      nomFonction: dirigeant.nomFonction
     });
 
+    console.log('set nom dirigeant : ', this.nomDirigeant);
+    console.log('set prenom : ', this.prenomDirigeant);
+    console.log('set email : ', this.emailDirigeant);
+
     this.closeModal('dirigeantModal');
-        
+
     });
   }
 }

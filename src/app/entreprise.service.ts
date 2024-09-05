@@ -41,10 +41,6 @@ export class EntrepriseService {
     return this.http.get<any[]>('http://localhost:8081/api-nextline/assurances');
   }
 
-  getFonctions(): Observable<any[]> {
-    return this.http.get<any[]>('http://localhost:8081/api-nextline/fonctions');
-  }
-
   addFormeJuridique(formeJuridique: { nomFormeJuridique: string }): Observable<any> {
 
     return this.http.post<any>('http://localhost:8081/api-nextline/formes-juridiques', formeJuridique);
@@ -58,6 +54,11 @@ export class EntrepriseService {
   addDirigeant ( dirigeant : { nomDirigeant: string, prenomDirigeant: string, emailDirigeant: string }) : Observable<any> {
 
     return this.http.post<any>('http://localhost:8081/api-nextline/dirigeants', dirigeant);
+  }
+
+  saveEntreprise(entrepriseData: any) {
+
+    return this.http.post(`${this.apiURL}/save-entreprise`, entrepriseData);
   }
 
 

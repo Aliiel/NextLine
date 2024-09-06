@@ -61,6 +61,22 @@ export class EntrepriseService {
     return this.http.post(`${this.apiURL}/save-entreprise`, entrepriseData);
   }
 
+  getFormeJuridiqueById(id: number | null): Observable<any> {
+    return this.http.get<any>(`http://localhost:8081/api-nextline/formes-juridiques/${id}`);
+  }
+
+  getAssuranceById(id: number| null): Observable<any> {
+    return this.http.get<any>(`http://localhost:8081/api-nextline/assurances/${id}`);
+  }
+
+  getDirigeantById(id: number| null): Observable<any> {
+    return this.http.get<any>(`http://localhost:8081/api-nextline/dirigeants/${id}`);
+  }
+
+  getVilleByCodePostalAndCodeInsee(codePostal: string, codeInsee: string): Observable<any> {
+    return this.http.get<any>(`http://localhost:8081/api-nextline/villes/find?codePostal=${codePostal}&codeInsee=${codeInsee}`);
+  }
+
 
 }
 

@@ -7,6 +7,7 @@ import { FormeJuridiqueDTO } from '../Models/forme-juridiqueDTO.model';
 import { AssuranceDTO } from '../Models/assuranceDTO.model';
 import { DirigeantDTO } from '../Models/dirigeantDTO.model';
 import { VilleDTO } from '../Models/villeDTO.model';
+import { EntrepriseDTO } from '../Models/entrepriseDTO.model';
 declare var bootstrap: any;
 
 @Component({
@@ -28,14 +29,12 @@ export class FormulaireEntrepriseComponent {
   prenomDirigeant: string = '';
   emailDirigeant: string = '';
   dirigeants: any[] = [];
-  selectedDirigeantId: number | null = null; 
   selectedFormeJuridiqueId: number | null = null; 
-  selectedAssuranceId: number | null = null; 
-  numeroSiret: string | null = null;
   formeJuridiqueDTO?: FormeJuridiqueDTO;
-  assuranceDTO?: AssuranceDTO;
-  dirigeantDTO?: DirigeantDTO;
-  villeDTO?: VilleDTO;
+  assuranceDTO: AssuranceDTO | null = null;
+  dirigeantDTO: DirigeantDTO | null = null;
+  villeDTO: VilleDTO | null = null;
+  entrepriseDTO: EntrepriseDTO | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -66,20 +65,53 @@ export class FormulaireEntrepriseComponent {
   }
 
   ngOnInit(): void {
-    // Si les données existent déjà, pré-remplir le formulaire
+
     const entrepriseData = this.entrepriseService.getEntrepriseData();
 
-    this.numeroSiret = entrepriseData.numeroSiret;
-
-    console.log('numéro siret : ', this.numeroSiret)
-
     if (entrepriseData) {
+      
+      this.entrepriseDTO = new EntrepriseDTO (
+
+        entrepriseData.raisonSociale,
+        entrepriseData.adresseEntreprise,
+        entrepriseData.telephoneEntreprise,
+        entrepriseData.emailEntreprise,
+        entrepriseData.numeroSiret,
+        new VilleDTO(
+          entrepriseData.villeDTO.id,
+          entrepriseData.villeDTO.codePostal,
+          entrepriseData.villeDTO.codeInsee,
+          entrepriseData.villeDTO.nomVille
+        ),
+        new FormeJuridiqueDTO(
+          entrepriseData.formeJuridiqueDTO.id,
+          entrepriseData.formeJuridiqueDTO.nomFormeJuridique
+        ),
+        new DirigeantDTO(
+          entrepriseData.dirigeantDTO.id,
+          entrepriseData.dirigeantDTO.nomDirigeant,
+          entrepriseData.dirigeantDTO.prenomDirigeant,
+          entrepriseData.dirigeantDTO.emailDirigeant
+        ),
+        new AssuranceDTO(
+          entrepriseData.assuranceDTO.id,
+          entrepriseData.assuranceDTO.nomAssurance,
+          entrepriseData.assuranceDTO.numeroSocietaire
+        )
+      );
+    }
+
+    console.log('entreprise récupérée et hydratée : ', this.entrepriseDTO);
+
+    console.log('numéro siret : ', this.entrepriseDTO?.numeroSiret)
+
+    if (this.entrepriseDTO) {
       this.entrepriseForm.patchValue({
-        raisonSociale: entrepriseData.raisonSociale,
-        adresseEntreprise: entrepriseData.adresseEntreprise,
+        raisonSociale: this.entrepriseDTO.raisonSociale,
+        adresseEntreprise: this.entrepriseDTO.adresseEntreprise,
         ville: {
-          nomVille: entrepriseData.villeDTO.nomVille,
-          codePostal: entrepriseData.villeDTO.codePostal
+          nomVille: this.entrepriseDTO.villeDTO.nomVille,
+          codePostal: this.entrepriseDTO.villeDTO.codePostal
         }
       });
     }
@@ -125,42 +157,42 @@ export class FormulaireEntrepriseComponent {
 
   onSubmit(): void {
 
-    if (this.entrepriseForm.valid) {
+    if (this.entrepriseDTO) {
+      // Mettre à jour les propriétés de l'objet entrepriseDTO avec les données du formulaire
+      this.entrepriseDTO.raisonSociale = this.entrepriseForm.get('raisonSociale')?.value;
+      this.entrepriseDTO.adresseEntreprise = this.entrepriseForm.get('adresseEntreprise')?.value;
+      this.entrepriseDTO.telephoneEntreprise = this.entrepriseForm.get('telephoneEntreprise')?.value;
+      this.entrepriseDTO.emailEntreprise = this.entrepriseForm.get('emailEntreprise')?.value;
+    }
 
-      const codePostal = this.entrepriseForm.get('ville.codePostal')?.value;
-      const codeInsee = this.entrepriseForm.get('ville.codeInsee')?.value;
-      
+    // Obtenir la valeur sélectionnée du formulaire
+    const formeJuridiqueId = this.entrepriseForm.get('formeJuridique')?.value;
+  
+    if (formeJuridiqueId) {
 
-      this.entrepriseService.getVilleByCodePostalAndCodeInsee(codePostal, codeInsee).subscribe((ville) => {
-        this.villeDTO = new VilleDTO (ville.codePostal, ville.codeInsee, ville.nomVille)
-      })
+      // Rechercher l'objet FormeJuridiqueDTO correspondant à l'ID sélectionné
+      this.entrepriseService.getFormeJuridiqueById(formeJuridiqueId).subscribe((formeJuridiqueData) => {
+        this.formeJuridiqueDTO = new FormeJuridiqueDTO(
+          formeJuridiqueData.id,
+          formeJuridiqueData.nomFormeJuridique
+        );
+  
+        // Associer la forme juridique à l'objet entreprise
+        if (this.entrepriseDTO) {
 
-      const entreprise = {
-        adresseEntreprise: this.entrepriseForm.get('adresseEntreprise')?.value,
-        assuranceDTO: this.assuranceDTO,
-        dirigeantDTO: this.dirigeantDTO,
-        formeJuridiqueDTO: this.formeJuridiqueDTO,
-        numeroSiret: this.numeroSiret,
-        raisonSociale: this.entrepriseForm.get('raisonSociale')?.value,
-        telephoneEntreprise: this.entrepriseForm.get('telephoneEntreprise')?.value,
-        emailEntreprise: this.entrepriseForm.get('emailEntreprise')?.value,
-        ville: this.villeDTO
-      };
-
-      console.log('Entreprise à enregistrer :', entreprise);
-
-      this.entrepriseService.saveEntreprise(entreprise).subscribe({
-        next: (response) => {
-          console.log('Entreprise créée avec succès :', response);
-          this.router.navigate(['/next-step']); // Rediriger vers la prochaine étape du formulaire
-        },
-        error: (err) => {
-          console.error('Erreur lors de la création de l\'entreprise :', err);
+          this.entrepriseDTO.formeJuridiqueDTO = this.formeJuridiqueDTO;
         }
+  
+        // Persist le reste des données de l'entreprise
+        this.entrepriseService.saveEntreprise(this.entrepriseDTO).subscribe(response => {
+          console.log('Entreprise sauvegardée :', response);
+        });
       });
     }
-  }
 
+    this.router.navigate(['/formulaire']); 
+
+  }
 
 
   saveNewFormeJuridique(): void {
@@ -170,25 +202,33 @@ export class FormulaireEntrepriseComponent {
       this.entrepriseService.addFormeJuridique({ nomFormeJuridique: this.nomFormeJuridique }).subscribe((formeJuridique) => {
 
         if (formeJuridique && formeJuridique.id) {
-
-          this.formesJuridiques.push(formeJuridique);  // Ajoute la nouvelle forme à la liste
-          this.selectedFormeJuridiqueId = formeJuridique.id;  // Récupère l'ID de la forme juridique créée
-          this.entrepriseForm.get('formeJuridique')?.setValue(formeJuridique.id);  // Affecte l'ID au champ du formulaire
+          // Ajouter la nouvelle forme à la liste
+          this.formesJuridiques.push(formeJuridique);
+          this.selectedFormeJuridiqueId = formeJuridique.id;
   
-          console.log('Forme juridique créée avec ID :', formeJuridique.id);
+          // Mettre à jour le formulaire
+          this.entrepriseForm.get('formeJuridique')?.setValue(formeJuridique.id);
   
-          // Récupérer l'objet complet à partir de l'ID
-          this.entrepriseService.getFormeJuridiqueById(formeJuridique.id).subscribe((formeJuridique) => {
+          // Récupérer l'objet FormeJuridiqueDTO complet pour associer à l'objet entreprise
+          this.entrepriseService.getFormeJuridiqueById(formeJuridique.id).subscribe((formeJuridiqueData) => {
 
-            this.formeJuridiqueDTO = new FormeJuridiqueDTO(formeJuridique.id, formeJuridique.nomFormeJuridique);
-            
-            console.log('Objet FormeJuridiqueDTO hydraté :', this.formeJuridiqueDTO);
-            
-            // Vous pouvez maintenant utiliser l'objet hydraté comme vous le souhaitez
+            this.formeJuridiqueDTO = new FormeJuridiqueDTO(
+
+              formeJuridiqueData.id,
+              formeJuridiqueData.nomFormeJuridique
+            );
+  
+            if (this.entrepriseDTO) {
+
+              this.entrepriseDTO.formeJuridiqueDTO = this.formeJuridiqueDTO;
+              console.log('entreprise avec nouvelle forme juridique : ', this.entrepriseDTO)
+            }
+  
+            console.log('Forme juridique créée et associée :', this.formeJuridiqueDTO);
           });
         }
   
-        this.closeModal('formeJuridiqueModal');  // Ferme le modal
+        this.closeModal('formeJuridiqueModal');
       });
     }
   }
@@ -196,65 +236,84 @@ export class FormulaireEntrepriseComponent {
   saveNewAssurance(): void {
 
     const newAssurance = {
-
       nomAssurance: this.nomAssurance,
       numeroSocietaire: this.numeroSocietaire
     };
   
     this.entrepriseService.addAssurance(newAssurance).subscribe((assurance) => {
-      if (assurance && assurance.id) {
-        this.assurances.push(assurance);  // Ajoute la nouvelle assurance à la liste
-        this.selectedAssuranceId = assurance.id;  // Récupère l'ID de l'assurance créée
   
-        // Récupérer l'objet complet AssuranceDTO à partir de l'ID
-        this.entrepriseService.getAssuranceById(this.selectedAssuranceId).subscribe((assuranceData) => {
-          this.assuranceDTO = new AssuranceDTO(assuranceData.id, assuranceData.nomAssurance, assuranceData.numeroSocietaire);
-          console.log('Objet FormeJuridiqueDTO hydraté :', this.assuranceDTO);
-       
+        // Récupérer l'objet AssuranceDTO complet
+        this.entrepriseService.getAssuranceById(assurance.id).subscribe((assuranceData) => {
+
+          this.assuranceDTO = new AssuranceDTO(
+
+            assuranceData.id,
+            assuranceData.nomAssurance,
+            assuranceData.numeroSocietaire
+          );
+  
+          // Associer à l'objet entreprise
+          if (this.entrepriseDTO) {
+            
+            this.entrepriseDTO.assuranceDTO = this.assuranceDTO;
+
+            console.log('objet entreprise avec la nouvelle assurance : ', this.entrepriseDTO)
+          }
+  
+          // Mettre à jour le formulaire
+          this.entrepriseForm.get('assurance')?.setValue({
+
+            nomAssurance: this.assuranceDTO.nomAssurance,
+            numeroSocietaire: this.assuranceDTO.numeroSocietaire
+          });
+  
+          console.log('Assurance créée et associée :', this.assuranceDTO);
         });
   
-        this.entrepriseForm.get('assurance')?.setValue({
-          nomAssurance: assurance.nomAssurance,
-          numeroSocietaire: assurance.numeroSocietaire
-        });
-  
-        console.log('Assurance créée avec ID :', assurance.id);
-      }
-  
-      this.closeModal('assuranceModal');  // Ferme le modal
+      this.closeModal('assuranceModal');
     });
-}
+  }
 
-saveNewDirigeant(): void {
+  saveNewDirigeant(): void {
 
-  const newDirigeant = {
-    nomDirigeant: this.nomDirigeant,
-    prenomDirigeant: this.prenomDirigeant,
-    emailDirigeant: this.emailDirigeant,
-  };
+    const newDirigeant = {
+      nomDirigeant: this.nomDirigeant,
+      prenomDirigeant: this.prenomDirigeant,
+      emailDirigeant: this.emailDirigeant
+    };
+  
+    this.entrepriseService.addDirigeant(newDirigeant).subscribe((dirigeant) => {
+  
+        // Récupérer l'objet DirigeantDTO complet
+        this.entrepriseService.getDirigeantById(dirigeant.id).subscribe((dirigeantData) => {
 
-  this.entrepriseService.addDirigeant(newDirigeant).subscribe((dirigeant) => {
-    if (dirigeant && dirigeant.id) {
-      this.dirigeants.push(dirigeant);  // Ajoute le nouveau dirigeant à la liste
-      this.selectedDirigeantId = dirigeant.id;  // Récupère l'ID du dirigeant créé
+          this.dirigeantDTO = new DirigeantDTO(
 
-      // Récupérer l'objet complet DirigeantDTO à partir de l'ID
-      this.entrepriseService.getDirigeantById(this.selectedDirigeantId).subscribe((dirigeantData) => {
-        this.dirigeantDTO = new DirigeantDTO(dirigeantData.id, dirigeantData.nomDirigeant, dirigeantData.prenomDirigeant, dirigeantData.emailDirigeant);
-        
-        console.log('dirigeantDTO hydraté : ', this.dirigeantDTO)
-      });
+            dirigeantData.id,
+            dirigeantData.nomDirigeant,
+            dirigeantData.prenomDirigeant,
+            dirigeantData.emailDirigeant
+          );
+  
+          // Associer à l'objet entreprise
+          if (this.entrepriseDTO) {
 
-      this.entrepriseForm.get('dirigeant')?.setValue({
-        nomDirigeant: dirigeant.nomDirigeant,
-        prenomDirigeant: dirigeant.prenomDirigeant,
-        emailDirigeant: dirigeant.emailDirigeant,
-      });
+            this.entrepriseDTO.dirigeantDTO = this.dirigeantDTO;
+            console.log('entreprise avec le dirigeant saisi : ', this.entrepriseDTO)
+          }
+  
+          // Mettre à jour le formulaire
+          this.entrepriseForm.get('dirigeant')?.setValue({
 
-      console.log('Dirigeant créé avec ID :', dirigeant.id);
-    }
+            nomDirigeant: this.dirigeantDTO.nomDirigeant,
+            prenomDirigeant: this.dirigeantDTO.prenomDirigeant,
+            emailDirigeant: this.dirigeantDTO.emailDirigeant,
+          });
+  
+          console.log('Dirigeant créé et associé :', this.dirigeantDTO);
+        });
 
-    this.closeModal('dirigeantModal');  // Ferme le modal
-  });
-}
+      this.closeModal('dirigeantModal');
+    });
+  }
 }

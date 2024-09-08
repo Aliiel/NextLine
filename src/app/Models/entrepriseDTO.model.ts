@@ -5,39 +5,36 @@ import { VilleDTO } from "./villeDTO.model";
 
 
 export class EntrepriseDTO {
-    raisonSociale: string;
-    adresseEntreprise: string;
-    numeroSiret: string;
-    telephoneEntreprise: string;
-    emailEntreprise: string;
-    formeJuridiqueDTO: FormeJuridiqueDTO;
-    assuranceDTO?: AssuranceDTO;
-    dirigeantDTO?: DirigeantDTO;
-    villeDTO: VilleDTO;
-  
-    constructor(
+  raisonSociale: string;
+  adresseEntreprise: string;
+  telephoneEntreprise: string;
+  emailEntreprise: string;
+  numeroSiret: string;
+  villeDTO: VilleDTO;
+  formeJuridiqueDTO: FormeJuridiqueDTO;
+  dirigeantDTO: DirigeantDTO;
+  assuranceDTO: AssuranceDTO;
 
-      raisonSociale: string,
-      adresseEntreprise: string,
-      telephoneEntreprise: string,
-      emailEntreprise: string,
-      formeJuridiqueDTO: FormeJuridiqueDTO,
-      villeDTO: VilleDTO,
-      numeroSiret: string,
-      assuranceDTO?: AssuranceDTO,
-      dirigeantDTO?: DirigeantDTO,
-      id?: number
-    ) 
-    {
-      this.raisonSociale = raisonSociale;
-      this.adresseEntreprise = adresseEntreprise;
-      this.numeroSiret = numeroSiret;
-      this.telephoneEntreprise = telephoneEntreprise;
-      this.emailEntreprise = emailEntreprise;
-      this.formeJuridiqueDTO = formeJuridiqueDTO;
-      this.assuranceDTO = assuranceDTO;
-      this.dirigeantDTO = dirigeantDTO;
-      this.villeDTO = villeDTO;
-    }
+  constructor(
+    raisonSociale: string,
+    adresseEntreprise: string,
+    telephoneEntreprise: string,
+    emailEntreprise: string,
+    numeroSiret: string,
+    villeDTO: VilleDTO,
+    formeJuridiqueDTO: FormeJuridiqueDTO,
+    dirigeantDTO: DirigeantDTO,
+    assuranceDTO: AssuranceDTO
+  ) {
+    this.raisonSociale = raisonSociale;
+    this.adresseEntreprise = adresseEntreprise;
+    this.telephoneEntreprise = telephoneEntreprise;
+    this.emailEntreprise = emailEntreprise;
+    this.numeroSiret = numeroSiret;
+    this.villeDTO = villeDTO;
+    this.formeJuridiqueDTO = formeJuridiqueDTO;
+    this.dirigeantDTO = dirigeantDTO;
+    this.assuranceDTO = assuranceDTO;
   }
+}
   

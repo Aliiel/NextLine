@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
-import { EntrepriseService } from '../entreprise.service';
+import { EntrepriseService } from '../Services/entreprise.service';
+import { TokenService } from '../Services/token.service';
 import { NgFor } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -21,8 +22,10 @@ export class FormulaireSiretComponent {
   raisonSociale: String = "";
   token: string | null = '';
 
-  constructor(private fb: FormBuilder,
+  constructor
+  (private fb: FormBuilder,
     protected entrepriseService: EntrepriseService,
+    protected tokenService: TokenService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -35,12 +38,27 @@ export class FormulaireSiretComponent {
   ngOnInit(): void {
     // Récupérer le token depuis l'URL
     this.route.queryParams.subscribe(params => {
-      this.token = params['token'] || '';
-      // Utiliser le token ici si nécessaire
+      const token = params['token'] || '';
+
+      console.log('token recup depuis l\'url :', token);
+  
+      if (token) {
+
+        this.token = token;
+        this.tokenService.setToken(token);
+        this.tokenService.verifyToken(token);
+
+        console.log('token vérifié : ', token);
+
+      } else {
+        
+        this.router.navigate(['/error']);
+      }
     });
   }
 
   get siret() {
+
     return this.siretForm.get('siret');
   }
 

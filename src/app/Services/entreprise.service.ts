@@ -18,26 +18,32 @@ export class EntrepriseService {
   }
 
   checkEntreprise(token: string, siret: string): Observable<any> {
+    
     return this.http.get(`${this.apiURL}/verifier/${token}/${siret}`);
   }
 
   setEntrepriseData(data: any): void {
+
     this.entrepriseData = data;
   }
 
   getEntrepriseData (): any {
+
     return this.entrepriseData;
   }
 
   getFormesJuridiques(): Observable<any[]> {
+
     return this.http.get<any[]>('http://localhost:8081/api-nextline/formes-juridiques');
   }
 
   getDirigeants(): Observable<any[]> {
+
     return this.http.get<any[]>('http://localhost:8081/api-nextline/dirigeants');
   }
 
   getAssurances(): Observable<any[]> {
+
     return this.http.get<any[]>('http://localhost:8081/api-nextline/assurances');
   }
 
@@ -72,12 +78,6 @@ export class EntrepriseService {
   getDirigeantById(id: number| null): Observable<any> {
     return this.http.get<any>(`http://localhost:8081/api-nextline/dirigeants/${id}`);
   }
-
-  getVilleByCodePostalAndCodeInsee(codePostal: string, codeInsee: string): Observable<any> {
-    return this.http.get<any>(`http://localhost:8081/api-nextline/villes/find?codePostal=${codePostal}&codeInsee=${codeInsee}`);
-  }
-
-
 }
 
 

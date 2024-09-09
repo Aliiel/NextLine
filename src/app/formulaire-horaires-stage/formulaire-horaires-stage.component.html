@@ -1,1 +1,47 @@
-<p>formulaire-horaires-stage works!</p>
+<form [formGroup]="horairesForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="heureDebut">Heure de début</label>
+      <input id="heureDebut" formControlName="heureDebut" type="time" class="form-control" />
+      <div *ngIf="horairesForm.get('heureDebut')?.invalid && horairesForm.get('heureDebut')?.touched" class="invalid-feedback">
+        Heure de début est requise.
+      </div>
+    </div>
+  
+    <div class="form-group">
+      <label for="heureDebutPauseDej">Heure de début de pause déjeuner</label>
+      <input id="heureDebutPauseDej" formControlName="heureDebutPauseDej" type="time" class="form-control" />
+    </div>
+  
+    <div class="form-group">
+      <label for="heureFinPauseDej">Heure de fin de pause déjeuner</label>
+      <input id="heureFinPauseDej" formControlName="heureFinPauseDej" type="time" class="form-control" />
+    </div>
+  
+    <div class="form-group">
+      <label for="heureFin">Heure de fin</label>
+      <input id="heureFin" formControlName="heureFin" type="time" class="form-control" />
+    </div>
+  
+    <div class="form-group">
+      <label for="stage">Stage</label>
+      <select id="stage" formControlName="stage" class="form-control">
+        <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.id }} - {{ stage.activiteDTO?.nomActivite }}</option>
+      </select>
+      <div *ngIf="horairesForm.get('stage')?.invalid && horairesForm.get('stage')?.touched" class="invalid-feedback">
+        Stage est requis.
+      </div>
+    </div>
+  
+    <div class="form-group">
+      <label for="jour">Jour</label>
+      <select id="jour" formControlName="jour" class="form-control">
+        <option *ngFor="let jour of jours" [value]="jour.id">{{ jour.nomJour }}</option>
+      </select>
+      <div *ngIf="horairesForm.get('jour')?.invalid && horairesForm.get('jour')?.touched" class="invalid-feedback">
+        Jour est requis.
+      </div>
+    </div>
+  
+    <button type="submit" class="btn btn-primary" [disabled]="horairesForm.invalid">Enregistrer</button>
+  </form>
+  

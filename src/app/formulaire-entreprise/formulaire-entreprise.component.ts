@@ -47,24 +47,24 @@ export class FormulaireEntrepriseComponent {
     private router: Router
   ) {
     this.entrepriseForm = this.fb.group({
-      raisonSociale: [''],
-      adresseEntreprise: [''],
+      raisonSociale: ['', Validators.required],
+      adresseEntreprise: ['', Validators.required],
       numeroSiret: [''],
-      telephoneEntreprise: [''],
-      emailEntreprise: [''],
+      telephoneEntreprise: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      emailEntreprise: ['', Validators.required, Validators.email],
       ville: this.fb.group({
-        nomVille: [''],
-        codePostal: ['']
+        nomVille: ['', Validators.required],
+        codePostal: ['', Validators.required]
       }),
-      formeJuridique: [''],
+      formeJuridique: ['', Validators.required],
       dirigeant: this.fb.group({
-        nomDirigeant: [''],
-        prenomDirigeant: [''],
-        emailDirigeant: [''],
+        nomDirigeant: ['', Validators.required],
+        prenomDirigeant: ['', Validators.required],
+        emailDirigeant: ['', Validators.required, Validators.email],
       }),
       assurance: this.fb.group({
-        nomAssurance: [''],
-        numeroSocietaire: ['']
+        nomAssurance: ['', Validators.required],
+        numeroSocietaire: ['', Validators.required]
       })
     });
   }
@@ -129,6 +129,7 @@ export class FormulaireEntrepriseComponent {
 
     if (this.entrepriseDTO) {
       this.entrepriseForm.patchValue({
+
         raisonSociale: this.entrepriseDTO.raisonSociale,
         adresseEntreprise: this.entrepriseDTO.adresseEntreprise,
         ville: {
@@ -212,9 +213,11 @@ export class FormulaireEntrepriseComponent {
       });
     }
 
-    this.router.navigate(['/formulaire-horaires-stage']); 
+    if (this.entrepriseForm.valid) {
 
+    this.router.navigate(['/formulaire-horaires-stage']); 
   }
+}
 
 
   saveNewFormeJuridique(): void {
@@ -229,7 +232,7 @@ export class FormulaireEntrepriseComponent {
           this.selectedFormeJuridiqueId = formeJuridique.id;
   
           // Mettre à jour le formulaire
-          this.entrepriseForm.get('formeJuridique')?.setValue(formeJuridique.id);
+          this.entrepriseForm.get('formeJuridique')?.patchValue(formeJuridique.id);
   
           // Récupérer l'objet FormeJuridiqueDTO complet pour associer à l'objet entreprise
           this.entrepriseService.getFormeJuridiqueById(formeJuridique.id).subscribe((formeJuridiqueData) => {
@@ -243,6 +246,12 @@ export class FormulaireEntrepriseComponent {
             if (this.entrepriseDTO) {
 
               this.entrepriseDTO.formeJuridiqueDTO = this.formeJuridiqueDTO;
+
+              this.entrepriseForm.patchValue({
+
+                formeJuridique: this.formeJuridiqueDTO.nomFormeJuridique
+              });
+
               console.log('entreprise avec nouvelle forme juridique : ', this.entrepriseDTO)
             }
   
@@ -283,10 +292,15 @@ export class FormulaireEntrepriseComponent {
           }
   
           // Mettre à jour le formulaire
-          this.entrepriseForm.get('assurance')?.setValue({
+          this.entrepriseForm.patchValue({
 
-            nomAssurance: this.assuranceDTO.nomAssurance,
-            numeroSocietaire: this.assuranceDTO.numeroSocietaire
+            assurance: {
+
+              nomAssurance: this.assuranceDTO.nomAssurance,
+              numeroSocietaire: this.assuranceDTO.numeroSocietaire
+            }
+
+            
           });
   
           console.log('Assurance créée et associée :', this.assuranceDTO);
@@ -321,16 +335,21 @@ export class FormulaireEntrepriseComponent {
           if (this.entrepriseDTO) {
 
             this.entrepriseDTO.dirigeantDTO = this.dirigeantDTO;
+         
             console.log('entreprise avec le dirigeant saisi : ', this.entrepriseDTO)
           }
-  
-          // Mettre à jour le formulaire
-          this.entrepriseForm.get('dirigeant')?.setValue({
 
-            nomDirigeant: this.dirigeantDTO.nomDirigeant,
-            prenomDirigeant: this.dirigeantDTO.prenomDirigeant,
-            emailDirigeant: this.dirigeantDTO.emailDirigeant,
+          this.entrepriseForm.patchValue({
+
+            dirigeant: {
+
+              nomDirigeant: this.dirigeantDTO.nomDirigeant,
+              prenomDirigeant: this.dirigeantDTO.prenomDirigeant,
+              emailDirigeant: this.dirigeantDTO.emailDirigeant
+            }
           });
+  
+        
   
           console.log('Dirigeant créé et associé :', this.dirigeantDTO);
         });
@@ -338,4 +357,5 @@ export class FormulaireEntrepriseComponent {
       this.closeModal('dirigeantModal');
     });
   }
+
 }

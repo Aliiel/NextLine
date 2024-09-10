@@ -81,7 +81,7 @@ export class FormulaireSiretComponent {
   
             console.log('Entreprise trouvée : ', data);
             this.entrepriseService.setEntrepriseData(data);
-            this.router.navigate(['/formulaire-entreprise']);
+            this.router.navigate(['/wizard-form']);
           },
   
           (error) => {

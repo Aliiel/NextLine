@@ -2,8 +2,11 @@
     <app-formulaire-entreprise></app-formulaire-entreprise>
 </div>
 
+<div *ngIf="currentStep === 2">
+    <app-formulaire-horaires-stage></app-formulaire-horaires-stage>
+</div>
 
-<div class="wizard-controls">
-    <button class="custom-btn-blue roboto-condensed" (click)="goToStep(currentStep - 1)" [disabled]="currentStep === 1">Précédent</button>
-    <button class="custom-btn-blue roboto-condensed" (click)="goToStep(currentStep + 1)" [disabled]="currentStep === totalSteps">Suivant</button>
+<div class="wizard-controls d-flex justify-content-center mt-4">
+    <button type="button" class="btn custom-btn-blue roboto-condensed me-2" (click)="goToStep(currentStep - 1)" [disabled]="currentStep === 1">Précédent</button>
+    <button type="button" class="btn custom-btn-blue roboto-condensed" (click)="goToStep(currentStep + 1)" [disabled]="currentStep === totalSteps">Suivant</button>
 </div>

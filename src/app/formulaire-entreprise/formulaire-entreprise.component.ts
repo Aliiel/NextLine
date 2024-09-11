@@ -51,20 +51,20 @@ export class FormulaireEntrepriseComponent {
       adresseEntreprise: ['', Validators.required],
       numeroSiret: [''],
       telephoneEntreprise: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-      emailEntreprise: ['', Validators.required, Validators.email],
+      emailEntreprise: ['', Validators.required],
       ville: this.fb.group({
         nomVille: ['', Validators.required],
         codePostal: ['', Validators.required]
       }),
-      formeJuridique: ['', Validators.required],
+      formeJuridique: [''],
       dirigeant: this.fb.group({
-        nomDirigeant: ['', Validators.required],
-        prenomDirigeant: ['', Validators.required],
-        emailDirigeant: ['', Validators.required, Validators.email],
+        nomDirigeant: [''],
+        prenomDirigeant: [''],
+        emailDirigeant: [''],
       }),
       assurance: this.fb.group({
-        nomAssurance: ['', Validators.required],
-        numeroSocietaire: ['', Validators.required]
+        nomAssurance: [''],
+        numeroSocietaire: ['']
       })
     });
   }

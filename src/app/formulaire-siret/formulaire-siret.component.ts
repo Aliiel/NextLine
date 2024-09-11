@@ -7,6 +7,7 @@ import { TokenService } from '../Services/token.service';
 import { NgFor } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Router, ActivatedRoute } from '@angular/router';
+declare var window: any; 
 
 @Component({
   selector: 'app-formulaire-siret',
@@ -21,6 +22,7 @@ export class FormulaireSiretComponent {
   entreprise: any = "";
   raisonSociale: String = "";
   token: string | null = '';
+  modal: any;
 
   constructor
   (private fb: FormBuilder,
@@ -55,6 +57,8 @@ export class FormulaireSiretComponent {
         this.router.navigate(['/error']);
       }
     });
+
+    this.modal = new window.bootstrap.Modal(document.getElementById('siretNotFoundModal'));
   }
 
   get siret() {
@@ -87,10 +91,14 @@ export class FormulaireSiretComponent {
           (error) => {
   
             console.error('L\'entreprise n\'est pas répertoriée', error);
-            // Gère l'erreur ici, par exemple en affichant un message d'erreur
+            this.openSiretNotFoundModal();
           }
         );
       }
     }
+  }
+
+  openSiretNotFoundModal(): void {
+    this.modal.show();  
   }
 }

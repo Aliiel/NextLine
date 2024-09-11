@@ -31,7 +31,7 @@ export class FormulaireEntrepriseComponent {
   emailDirigeant: string = '';
   dirigeants: any[] = [];
   selectedFormeJuridiqueId: number | null = null; 
-  formeJuridiqueDTO?: FormeJuridiqueDTO;
+  formeJuridiqueDTO: FormeJuridiqueDTO| null = null;
   assuranceDTO: AssuranceDTO | null = null;
   dirigeantDTO: DirigeantDTO | null = null;
   villeDTO: VilleDTO | null = null;
@@ -215,7 +215,7 @@ export class FormulaireEntrepriseComponent {
 
     if (this.entrepriseForm.valid) {
 
-    this.router.navigate(['/formulaire-horaires-stage']); 
+    this.router.navigate(['/formulaire']); 
   }
 }
 

@@ -204,19 +204,18 @@ export class FormulaireEntrepriseComponent {
         if (this.entrepriseDTO) {
 
           this.entrepriseDTO.formeJuridiqueDTO = this.formeJuridiqueDTO;
-        }
-  
-        // Persist le reste des données de l'entreprise
-        this.entrepriseService.saveEntreprise(this.entrepriseDTO).subscribe(response => {
+
+          this.entrepriseService.setEntrepriseData(this.entrepriseDTO);
+
+           // Persist le reste des données de l'entreprise
+          this.entrepriseService.saveEntreprise(this.entrepriseDTO).subscribe(response => {
           console.log('Entreprise sauvegardée :', response);
         });
+        }
+  
+       
       });
     }
-
-    if (this.entrepriseForm.valid) {
-
-    this.router.navigate(['/formulaire']); 
-  }
 }
 
 
@@ -299,8 +298,6 @@ export class FormulaireEntrepriseComponent {
               nomAssurance: this.assuranceDTO.nomAssurance,
               numeroSocietaire: this.assuranceDTO.numeroSocietaire
             }
-
-            
           });
   
           console.log('Assurance créée et associée :', this.assuranceDTO);

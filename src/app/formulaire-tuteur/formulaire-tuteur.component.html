@@ -1,0 +1,58 @@
+<div class="container mt-5 mb-5">
+    <h2 class="text-center">Saisir les informations du tuteur de stage</h2>
+<form [formGroup]="tuteurForm" (ngSubmit)="onSubmit()">
+    <div class="form-group mt-2">
+      <label for="nomTuteur">Nom :</label>
+      <input id="nomTuteur" formControlName="nomTuteur" class="form-control" type="text" />
+    </div>
+  
+    <div class="form-group mt-2">
+      <label for="prenomTuteur">Prénom :</label>
+      <input id="prenomTuteur" formControlName="prenomTuteur" class="form-control" type="text" />
+    </div>
+  
+    <div class="form-group mt-2">
+      <label for="emailTuteur">Email :</label>
+      <input id="emailTuteur" formControlName="emailTuteur" class="form-control" type="email" />
+    </div>
+  
+    <div class="form-group mt-2">
+      <label for="telTuteur">Téléphone :</label>
+      <input id="telTuteur" formControlName="telTuteur" class="form-control" type="text" />
+    </div>
+  
+    <div class="text-center mb-3">
+        <button type="button" class="btn custom-btn-blue-modal roboto-condensed btn-same-size" (click)="openModal('fonctionModal')">Ajouter une nouvelle fonction</button>
+      </div>
+    <div class="form-group mt-2">
+      <label for="fonction">Fonction :</label>
+      <select id="fonction" formControlName="fonction" class="form-control">
+        <option *ngFor="let fonction of fonctions" [value]="fonction.id">{{ fonction.nomFonction }}</option>
+      </select>
+    </div>
+  </form>
+</div>
+  
+  <!-- Modal pour ajouter une nouvelle fonction -->
+<div class="modal fade" id="fonctionModal" tabindex="-1" aria-labelledby="fonctionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="fonctionModalLabel">Ajouter une fonction</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="nomFonctionInput">Nom de la fonction :</label>
+            <input type="text" id="nomFonctionInput" [(ngModel)]="nomFonction" class="form-control">
+          </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn custom-btn-red roboto-condensed" data-bs-dismiss="modal">Fermer</button>
+            <button type="button" class="btn custom-btn-blue-modal roboto-condensed" (click)="saveNewFonction()">Enregistrer</button>
+          </div>
+      </div>
+    </div>
+  </div>
+  
+  

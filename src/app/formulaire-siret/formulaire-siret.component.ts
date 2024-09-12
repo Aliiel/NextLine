@@ -59,6 +59,13 @@ export class FormulaireSiretComponent {
     });
 
     this.modal = new window.bootstrap.Modal(document.getElementById('siretNotFoundModal'));
+
+    this.siret?.valueChanges.subscribe(value => {
+      if (value) {
+        const trimmedValue = value.replace(/\s+/g, ''); 
+        this.siret?.setValue(trimmedValue, { emitEvent: false }); 
+      }
+    });
   }
 
   get siret() {
@@ -94,6 +101,8 @@ export class FormulaireSiretComponent {
             this.openSiretNotFoundModal();
           }
         );
+
+        
       }
     }
   }

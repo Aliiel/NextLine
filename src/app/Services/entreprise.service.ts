@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { FonctionDTO } from '../Models/fonctionDTO.model';
+import { TuteurDTO } from '../Models/tuteurDTO.model';
 
 @Injectable({
   providedIn: 'root'
@@ -77,6 +79,25 @@ export class EntrepriseService {
 
   getDirigeantById(id: number| null): Observable<any> {
     return this.http.get<any>(`http://localhost:8081/api-nextline/dirigeants/${id}`);
+  }
+
+  addFonction ( fonction : { nomFonction: string }) : Observable<any> {
+
+    return this.http.post<any>('http://localhost:8081/api-nextline/fonctions', fonction);
+  }
+
+  getFonctionById(id: number| null): Observable<any> {
+    return this.http.get<any>(`http://localhost:8081/api-nextline/fonctions/${id}`);
+  }
+
+  saveTuteur(tuteurDTO: TuteurDTO) {
+
+    return this.http.post(`http://localhost:8081/api-nextline/tuteurs`, tuteurDTO);
+  }
+
+  getFonctions(): Observable<any[]> {
+
+    return this.http.get<any[]>('http://localhost:8081/api-nextline/fonctions');
   }
 }
 

@@ -11,10 +11,6 @@ import { WizardFormComponent } from './wizard-form/wizard-form.component';
 export const routes: Routes = [
     { path: '', component: HomeComponent },
     { path: 'formulaire-siret', component: FormulaireSiretComponent},
-    { path: 'formulaire-entreprise', component: FormulaireEntrepriseComponent},
-    { path: 'formulaire', component: FormulaireComponent},
-    { path: 'formulaire-tuteur', component: FormulaireTuteurComponent},
-    { path: 'formulaire-horaires-stage', component: FormulaireHorairesStageComponent},
     { path: 'wizard-form', component: WizardFormComponent},
     { path: 'error', component: ErreurComponent },
     { path: '**', redirectTo: 'error' }

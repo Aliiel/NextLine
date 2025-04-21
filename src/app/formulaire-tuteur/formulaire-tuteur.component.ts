@@ -3,10 +3,10 @@ import { TokenService } from '../Services/token.service';
 import { EntrepriseService } from '../Services/entreprise.service';
 import { FonctionDTO } from '../Models/fonctionDTO.model';
 import { EntrepriseDTO } from '../Models/entrepriseDTO.model';
+import { Entreprise } from '../Models/entreprise.model';
 import { TuteurDTO } from '../Models/tuteurDTO.model';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
-import { Router } from '@angular/router';
 declare var bootstrap: any;
 
 @Component({
@@ -20,12 +20,13 @@ export class FormulaireTuteurComponent {
 
   token: string | null = '';
   tuteurForm: FormGroup;
-  nomFonction: string = ''; 
+  nomFonction: string = '';
   fonctionDTO: FonctionDTO | null = null;
   entrepriseDTO: EntrepriseDTO | null = null;
+  entreprise: Entreprise | null = null;
   tuteurDTO: TuteurDTO | null = null;
   fonctions: any[] = [];
-  selectedFonctionId: number | null = null; 
+  selectedFonctionId: number | null = null;
 
 
   constructor
@@ -33,7 +34,6 @@ export class FormulaireTuteurComponent {
     private fb: FormBuilder,
     private tokenService: TokenService,
     private entrepriseService: EntrepriseService,
-    private router: Router
   ) {
     this.tuteurForm = this.fb.group({
     nomTuteur: ['', Validators.required],
@@ -46,7 +46,7 @@ export class FormulaireTuteurComponent {
 
   ngOnInit(): void {
 
-    /* 
+    /*
     const token = this.tokenService.getToken();
 
     console.log('token récupéré depuis le service token : ', token);
@@ -60,7 +60,7 @@ export class FormulaireTuteurComponent {
       console.log('token vérifié : ', token);
 
     } else {
-      
+
       this.router.navigate(['/error']);
     }
       */
@@ -71,39 +71,79 @@ export class FormulaireTuteurComponent {
       this.fonctions = data;
     });
 
-    
+    this.entrepriseDTO = this.entrepriseService.getEntrepriseData();
+
+    if (this.entrepriseDTO) {
+
+      console.log("entreprise récupérée : ", this.entrepriseDTO);
+
+    } else {
+
+      console.log("Aucune entreprise récupérée.");
+    }
+
   }
 
   onSubmit() {
+    if (this.entrepriseDTO) {
+      this.entrepriseService.getEntrepriseBySiret(this.entrepriseDTO.numeroSiret).subscribe(
+        (entrepriseData) => {
+          this.entrepriseDTO = new Entreprise(
+            entrepriseData.id,
+            entrepriseData.raisonSociale,
+            entrepriseData.adresseEntreprise,
+            entrepriseData.numeroSiret,
+            entrepriseData.telephoneEntreprise,
+            entrepriseData.emailEntreprise,
+            entrepriseData.villeDTO,
+            entrepriseData.formeJuridiqueDTO,
+            entrepriseData.dirigeantDTO,
+            entrepriseData.assuranceDTO
+          );
 
-    if (this.tuteurForm.valid) {
+          console.log("Entreprise récupérée depuis la BDD avec numéro SIRET : ", this.entrepriseDTO);
 
-      const entrepriseDTO = this.entrepriseService.getEntrepriseData();
+          const fonctionId = this.tuteurForm.get('fonction')?.value;
 
-      console.log("entreprise récupérée : ", entrepriseDTO);
+          if (fonctionId) {
+            this.entrepriseService.getFonctionById(fonctionId).subscribe(
+              (fonctionData) => {
+                this.fonctionDTO = new FonctionDTO(
+                  fonctionData.id,
+                  fonctionData.nomFormeJuridique
+                );
 
-      const fonctionDTO = this.fonctionDTO || new FonctionDTO(0, 'Aucune fonction');
+                if (this.entrepriseDTO instanceof EntrepriseDTO) {
+                  const tuteurDTO = new TuteurDTO(
+                    this.tuteurForm.get('nomTuteur')?.value,
+                    this.tuteurForm.get('prenomTuteur')?.value,
+                    this.tuteurForm.get('emailTuteur')?.value,
+                    this.tuteurForm.get('telTuteur')?.value,
+                    this.entrepriseDTO,
+                    this.fonctionDTO
+                  );
+                }
 
-      console.log("fonctionDTO : ", fonctionDTO);
-      
-      const tuteurDTO = new TuteurDTO(
-        this.tuteurForm.get('nomTuteur')?.value,
-        this.tuteurForm.get('prenomTuteur')?.value,
-        this.tuteurForm.get('emailTuteur')?.value,
-        this.tuteurForm.get('telTuteur')?.value,
-        entrepriseDTO, 
-        fonctionDTO 
+                console.log("Tuteur hydraté : ", this.tuteurDTO);
+
+                // Persist le tuteurDTO en appelant l'API ou une autre méthode
+                if (this.tuteurDTO instanceof TuteurDTO) {
+                  this.entrepriseService.saveTuteur(this.tuteurDTO).subscribe(response => {
+                    console.log('Tuteur sauvegardé :', response);
+                  });
+                }
+
+              },
+              (error) => {
+                console.error('Erreur lors de la récupération de la fonction :', error);
+              }
+            );
+          }
+        },
+        (error) => {
+          console.error('Erreur lors de la récupération de l\'entreprise :', error);
+        }
       );
-
-      console.log("Tuteur hydraté : ", tuteurDTO); 
-
-      if (tuteurDTO) {
-
-        // Persist le tuteurDTO en appelant l'API ou une autre méthode
-        this.entrepriseService.saveTuteur(tuteurDTO).subscribe(response => {
-          console.log('Tuteur sauvegardé :', response);
-        });
-      }
     }
   }
 
@@ -117,12 +157,12 @@ export class FormulaireTuteurComponent {
           // Ajouter la nouvelle forme à la liste
           this.fonctions.push(fonction);
           this.selectedFonctionId = fonction.id;
-  
+
           // Mettre à jour le formulaire
           this.tuteurForm.get('fonctionDTO')?.patchValue(fonction.id);
           console.log("nom fonction : ", fonction.nomFonction);
           console.log("id fonction : ", fonction.id);
-  
+
           // Récupérer l'objet FormeJuridiqueDTO complet pour associer à l'objet entreprise
           this.entrepriseService.getFonctionById(fonction.id).subscribe((fonctionData) => {
 
@@ -131,7 +171,7 @@ export class FormulaireTuteurComponent {
               fonctionData.id,
               fonctionData.nomFonction
             );
-  
+
             if (this.tuteurDTO) {
 
               console.log("tuteur : ", this.tuteurDTO);
@@ -145,11 +185,11 @@ export class FormulaireTuteurComponent {
 
               console.log('tuteur avec nouvelle fonction : ', this.tuteurDTO)
             }
-  
+
             console.log('Fonction créée et associée :', this.fonctionDTO);
           });
         }
-  
+
         this.closeModal('fonctionModal');
       });
     }

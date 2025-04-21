@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FonctionDTO } from '../Models/fonctionDTO.model';
+import { EntrepriseDTO } from '../Models/entrepriseDTO.model';
 import { TuteurDTO } from '../Models/tuteurDTO.model';
 
 @Injectable({
@@ -11,6 +11,7 @@ export class EntrepriseService {
 
   private apiURL = "http://localhost:8081/api-nextline/entreprises";
   private entrepriseData: any = null;
+  private entrepriseDTO: EntrepriseDTO | null = null;
 
   constructor(private http: HttpClient) { }
 
@@ -24,14 +25,20 @@ export class EntrepriseService {
     return this.http.get(`${this.apiURL}/verifier/${token}/${siret}`);
   }
 
-  setEntrepriseData(data: any): void {
+  setEntrepriseData(data: EntrepriseDTO): void {
 
-    this.entrepriseData = data;
+    this.entrepriseDTO = data;
+    console.log("entreprise dans le service : ", this.entrepriseDTO);
+  }
+  
+  getEntrepriseData(): EntrepriseDTO | null {
+
+    return this.entrepriseDTO;
   }
 
-  getEntrepriseData (): any {
+  getEntrepriseBySiret(numeroSiret: string): Observable<any> {
 
-    return this.entrepriseData;
+    return this.http.get(`${this.apiURL}/siret/${numeroSiret}`);
   }
 
   getFormesJuridiques(): Observable<any[]> {

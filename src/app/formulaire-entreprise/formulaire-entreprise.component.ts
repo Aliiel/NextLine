@@ -206,6 +206,7 @@ export class FormulaireEntrepriseComponent {
           this.entrepriseDTO.formeJuridiqueDTO = this.formeJuridiqueDTO;
 
           this.entrepriseService.setEntrepriseData(this.entrepriseDTO);
+        
 
            // Persist le reste des données de l'entreprise
           this.entrepriseService.saveEntreprise(this.entrepriseDTO).subscribe(response => {

@@ -6,6 +6,10 @@
     <app-formulaire-tuteur></app-formulaire-tuteur>
 </div>
 
+<div *ngIf="currentStep === 3">
+    <app-formulaire-lieu-realisation></app-formulaire-lieu-realisation>
+</div>
+
 <div class="wizard-controls d-flex justify-content-center mt-4">
     <button type="button" class="btn custom-btn-blue roboto-condensed me-2" (click)="goToStep(currentStep - 1)" [disabled]="currentStep === 1">Précédent</button>
     <button type="button" class="btn custom-btn-blue roboto-condensed" (click)="goToStep(currentStep + 1)" [disabled]="currentStep === totalSteps">Suivant</button>
